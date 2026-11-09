@@ -1,0 +1,22 @@
+# Course report (kept locally, not published)
+raport/
+projekt1_*.zip
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# MATLAB
+*.asv
+*.m~
+slprj/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

@@ -1,0 +1,165 @@
+--- Setup ---
+R = 6378137 m, c = 299792458 m/s
+
+    Nr satelity    Szerokość dziesiętna [°]    Długość dziesiętna [°]       Szerokość kątowa             Długość kątowa         Wysokość n.p.m. [m]    Czas nadejścia sygnału GPS [s]
+    ___________    ________________________    ______________________    _______________________    ________________________    ___________________    ______________________________
+
+      {'G03'}          54.253386795356             36.441168212126       {'54° 15′ 12.19246″ N'}    {'36° 26′ 28.20556″ E' }        20024898.825             0.067190309201401       
+      {'G04'}           31.36295581473              6.201709036957       {'31° 21′ 46.64093″ N'}    {'6° 12′ 06.15253″ E'  }       20277584.7364             0.069886284030528       
+      {'G06'}          53.582883960348            -74.807558497356       {'53° 34′ 58.38226″ N'}    {'74° 48′ 27.21059″ W' }       20214465.5039             0.077815554135015       
+      {'G09'}           9.253553307687            -15.650707951741       {'9° 15′ 12.79191″ N' }    {'15° 39′ 02.54863″ W' }       20213401.2312             0.077458410170479       
+      {'G17'}          19.734708330997            -32.121174963555       {'19° 44′ 04.94999″ N'}    {'32° 07′ 16.22987″ W' }       20450358.0232             0.078210154449927       
+      {'G19'}          40.698072503348            -52.422994611146       {'40° 41′ 53.06101″ N'}    {'52° 25′ 22.78060″ W' }       19973324.2693             0.075818239230963       
+      {'G28'}          54.682210539525            117.602366823201       {'54° 40′ 55.95794″ N'}    {'117° 36′ 08.52056″ E'}       20181118.7947             0.077675370718688       
+      {'G31'}          43.227850319453             82.494853321939       {'43° 13′ 40.26115″ N'}    {'82° 29′ 41.47196″ E' }       19885874.7568             0.072964924375932       
+
+Number of satellites N = 8
+Altitude  h : min = 19885.875 km, max = 20450.358 km
+Time      t : min = 0.067190309 s, max = 0.078210154 s (spread 11.020 ms)
+
+--- Satellite positions (ECEF) [m] ---
+Sat G03  : X=  12408663.861  Y=   9162225.480  Z=  21428928.723
+Sat G04  : X=  22627783.735  Y=   2458846.870  Z=  13873174.712
+Sat G06  : X=   4137156.596  Y= -15235209.172  Z=  21399505.712
+Sat G09  : X=  25272413.811  Y=  -7080300.896  Z=   4276019.751
+Sat G17  : X=  21387201.231  Y= -13427183.028  Z=   9059057.603
+Sat G19  : X=  12183447.246  Y= -15833669.854  Z=  17183073.741
+Sat G28  : X=  -7114101.038  Y=  13606651.171  Z=  21671240.820
+Sat G31  : X=   2499570.859  Y=  18972955.858  Z=  17988257.422
+
+--- Ranges d_i = c*t_i and plausibility check [m] ---
+Sat                 d_i     min (zenith)    max (horizon)   above horizon
+G03        20143147.949     20024898.825     25621078.611   true
+G04        20951380.870     20277584.736     25881400.072   true
+G06        23328516.245     20214465.504     25816387.748   true
+G09        23221447.178     20213401.231     25815291.474   true
+G17        23446814.443     20450358.023     26059307.620   true
+G19        22729736.300     19973324.269     25567926.772   true
+G28        23286490.314     20181118.795     25782037.095   true
+G31        21874334.026     19885874.757     25477788.012   true
+All 8 satellites inside the plausible range: true
+
+--- Base starting point (Earth surface, under satellite centroid) ---
+x0 = [3768237.281, -286029.614, 5138015.808]
+
+------------------------------------------------------------
+ 3a) lsqnonlin (Optimization Toolbox), algorithm = levenberg-marquardt
+------------------------------------------------------------
+
+                                        First-order                     Norm of 
+ Iteration  Func-count      Resnorm      optimality       Lambda           step
+     0           1      7.85768e+12        4.53e+06         0.01
+     1           2      1.45623e+10        1.54e+05        0.001    1.66101e+06
+     2           3          47530.8             318       0.0001        71683.8
+     3           4      7.25083e-05          0.0129        1e-05        127.836
+     4           5      6.00264e-09        5.15e-08        1e-06     0.00577756
+     5           6                                                 3.31598e-08
+
+Local minimum possible.
+lsqnonlin stopped because the relative size of the current step is less than
+the value of the step size tolerance.
+
+
+--- Reference solution (lsqnonlin, tol = 1e-12, base x0) ---
+x = 3662035.037822
+y = 1384359.511942
+z = 5035402.728925
+Objective value (resnorm) = 6.002642e-09
+Residual norm = 7.747672e-05 m
+Iterations = 5, function evaluations = 6, exitflag = 4
+First-order optimality = 5.151643e-08
+
+------------------------------------------------------------
+ 3b) Own Levenberg-Marquardt implementation (cross-check)
+------------------------------------------------------------
+ iter             f(p)         ||step||     lambda
+    1     7.208625e+09     1.666379e+06   1.00e-03
+    2     2.260300e+04     6.976238e+04   5.00e-04
+    3     1.131563e-03     1.229575e+02   2.50e-04
+    4     3.025388e-09     3.077745e-02   1.25e-04
+    5     3.001265e-09     5.365516e-06   6.25e-05
+
+--- Solution (lm_solve) ---
+x = 3662035.037822
+y = 1384359.511942
+z = 5035402.728925
+Objective value (resnorm) = 6.002531e-09
+Residual norm = 7.747600e-05 m
+Iterations = 5, function evaluations = 6, exitflag = 1
+Distance lsqnonlin <-> own implementation: 3.322225e-08 m
+
+--- Receiver position, geographic coordinates ---
+Latitude  = 52.13536333 deg
+Longitude = 20.70810167 deg
+Height above sea level = 125.500 m
+Google Maps: https://www.google.com/maps?q=52.13536333,20.70810167
+
+Map figures written (basemap: osm_tiles).
+
+------------------------------------------------------------
+ 5) OBSERVATION GEOMETRY SEEN FROM THE RECEIVER
+------------------------------------------------------------
+Sat      elev [deg]   azim [deg]
+G03           77.32        71.10
+G04           59.75       212.70
+G06           24.26       312.37
+G09           25.43       227.89
+G17           25.62       252.14
+G19           28.21       287.34
+G28           24.34        45.93
+G31           37.70        76.98
+
+Dilution of precision (position only, 3 unknowns):
+  HDOP = 1.0329, VDOP = 0.5907, PDOP = 1.1898
+Including a receiver clock bias (4 unknowns):
+  GDOP = 2.6601, TDOP = 1.2973
+
+------------------------------------------------------------
+ 6a) EFFECT OF THE STARTING POINT
+------------------------------------------------------------
+Starting point                         |              x              y              z | ||res||[m] |   iter   exfl |  dist2ref[m]
+Base (under centroid, R)               |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      5      4 |    0.000e+00
+Earth center                           |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      6      4 |    3.304e-08
+Antipode (surface)                     |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      5      1 |    3.414e-08
+Base + 1000 km (random direction)      |    3662035.038    1384359.512    5035402.729 |  7.747e-05 |      5      4 |    1.333e-07
+Far away: 10*R along base direction    |   14445918.724      36945.677   30114416.256 |  1.177e+07 |     11      3 |    2.733e+07
+
+Basin of attraction scan: 2025 starting points, 91.8% converged to the reference solution (< 1 m).
+
+------------------------------------------------------------
+ 6b) EFFECT OF STOP TEST TOLERANCE (FunctionTolerance = StepTolerance)
+------------------------------------------------------------
+       tol |              x              y              z | ||res||[m] |   iter   exfl |  dist2ref[m]
+     1e-02 |    3662035.039    1384359.514    5035402.723 |  8.515e-03 |      3      1 |    5.778e-03
+     1e-04 |    3662035.039    1384359.514    5035402.723 |  8.515e-03 |      3      1 |    5.778e-03
+     1e-06 |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      4      1 |    0.000e+00
+     1e-08 |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      4      1 |    0.000e+00
+     1e-10 |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      5      4 |    0.000e+00
+     1e-12 |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      5      4 |    0.000e+00
+     1e-14 |    3662035.038    1384359.512    5035402.729 |  7.748e-05 |      5      4 |    0.000e+00
+
+------------------------------------------------------------
+ 6c) EFFECT OF NOISE IN SIGNAL ARRIVAL TIMES
+------------------------------------------------------------
+ sigma_t [s] |  sigma_d [m] | mean err[m] std err[m] max err[m]
+     0.0e+00 |        0.000 |      0.000      0.000      0.000
+     1.0e-09 |        0.300 |      0.324      0.156      0.854
+     1.0e-08 |        2.998 |      3.205      1.354      7.431
+     1.0e-07 |       29.979 |     33.237     14.540     80.333
+     1.0e-06 |      299.792 |    299.277    140.514    820.813
+
+Horizontal error statistics for sigma_t = 1e-8 s:
+  std East = 1.802 m, std North = 2.444 m, std Up = 1.703 m
+  semi-major axis of the 95% confidence ellipse = 6.168 m
+
+------------------------------------------------------------
+ 6d) EFFECT OF NOISE IN SATELLITE POSITIONS (simulated ephemeris error)
+------------------------------------------------------------
+ sigma_pos [m] | mean err[m] std err[m]
+           0.0 |      0.000      0.000
+           1.0 |      1.074      0.507
+          10.0 |     10.367      5.117
+          50.0 |     52.079     24.947
+         100.0 |    104.429     46.986
+
+Figures and results written to: C:\Users\almis\Desktop\studia\informatyka_mgr\AMO\projekt1\results
